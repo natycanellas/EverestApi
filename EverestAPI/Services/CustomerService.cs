@@ -1,4 +1,7 @@
 ﻿using EverestAPI.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EverestAPI.Services
 {
@@ -14,17 +17,21 @@ namespace EverestAPI.Services
             if (customersList.Any(customer => customer.Email == model.Email))
                 throw new ArgumentException("This email already exists");
         }
-        public void Create(CustomerModel customer)
+        public long Create(CustomerModel customer)
         {
             CustomerDuplicate(customer);
 
             customer.Id = customersList.LastOrDefault()?.Id + 1 ?? 1;
 
             customersList.Add(customer);
+
+            return customer.Id;
         }
-        public void Update(CustomerModel updateModel)
+        public void Update(CustomerModel updateModel, long id)
         {
             CustomerDuplicate(updateModel);
+
+            updateModel.Id = id;
 
             var index = customersList.FindIndex(customer => customer.Id == updateModel.Id);
 
@@ -37,7 +44,7 @@ namespace EverestAPI.Services
         {
             var response = customersList.FirstOrDefault(customer => customer.Id == id);
 
-            if (response == null) throw new ArgumentException($"Customer with id: {id} was not found");
+            if (response == null) throw new ArgumentNullException($"Customer for id: {id} was not found");
 
             return response;
         }

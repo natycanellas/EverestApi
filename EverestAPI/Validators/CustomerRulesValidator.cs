@@ -1,5 +1,7 @@
 ﻿using EverestAPI.Models;
 using FluentValidation;
+using System;
+using System.Linq;
 
 namespace EverestAPI.Validators
 {

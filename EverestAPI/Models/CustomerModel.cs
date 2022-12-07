@@ -1,4 +1,6 @@
-﻿namespace EverestAPI.Models
+﻿using System;
+
+namespace EverestAPI.Models
 {
     public class CustomerModel : IModel
     {
@@ -14,9 +16,8 @@
             string country, 
             string city,
             string postalCode, 
-            string address, 
-            long id
-            )
+            string address
+        )
         {
             FullName = fullName;
             Email = email;
@@ -30,7 +31,6 @@
             City = city;
             PostalCode = postalCode;
             Address = address;
-            Id = id;
         }
 
         public string FullName { get; set; }

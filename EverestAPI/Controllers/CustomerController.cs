@@ -1,7 +1,7 @@
 ﻿using EverestAPI.Models;
 using EverestAPI.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace EverestAPI.Controllers
 {
@@ -46,9 +46,9 @@ namespace EverestAPI.Controllers
         {
             try
             {
-                _customerService.Create(customerModel);
+                var id = _customerService.Create(customerModel);
 
-                return Created("Id:", customerModel.Id);
+                return Created("Id:", id);
             }
             catch(ArgumentException exception)
             {
@@ -59,11 +59,11 @@ namespace EverestAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(CustomerModel customerModel)
+        public IActionResult Update(CustomerModel customerModel, long id)
         {
             try
             {
-                _customerService.Update(customerModel);
+                _customerService.Update(customerModel, id);
                 return Ok();
             }
             catch (ArgumentNullException exception)

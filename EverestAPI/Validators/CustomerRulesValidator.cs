@@ -13,19 +13,20 @@ namespace EverestAPI.Validators
                 .NotEmpty()
                 .MinimumLength(5);
 
-            RuleFor(customer => customer.Email).NotEmpty()
-                .WithMessage("Email is required")
-                .EmailAddress().WithMessage("Invalid Email format");
+            RuleFor(customer => customer.Email)
+                .NotEmpty()
+                .EmailAddress()
+                .WithMessage("Invalid Email format, example of correct email: myemail@email.com");
 
             RuleFor(customer => customer.Cpf)
                 .NotEmpty()
                 .Must(isCpfValid)
-                .WithMessage("Cpf is not valid");
+                .WithMessage("Cpf is not valid, make sure it has 11 digits.");
 
             RuleFor(customer => customer.DateOfBirth)
                 .NotEmpty()
-                .WithMessage("Date of birth must be informed")
-                .Must(OverAgeCustomer).WithMessage("Customer must be at least 18 years old");
+                .Must(OverAgeCustomer)
+                .WithMessage("Customer must be at least 18 years old.");
 
             RuleFor(customer => customer.Country)
                 .NotEmpty()
@@ -39,13 +40,15 @@ namespace EverestAPI.Validators
 
             RuleFor(customer => customer.Cellphone)
                 .NotEmpty()
-                .MinimumLength(11)
-                .MaximumLength(16);
+                .MaximumLength(14)
+                .Must(isCellphoneValid)
+                .WithMessage("Cellphone is invalid, correct cellphone format: (XX)9XXXX-XXXX.");
 
             RuleFor(customer => customer.PostalCode)
                 .NotEmpty()
-                .MinimumLength(8)
-                .MaximumLength(9);
+                .MaximumLength(8)
+                .Must(isPostalCodeValid)
+                .WithMessage("Postal code is invalid, correct postal code format: XXXXX-XXX.");
         }
 
         private static bool OverAgeCustomer(DateTime dateOfBirth)
@@ -98,6 +101,44 @@ namespace EverestAPI.Validators
             digit = digit + rest.ToString();
 
             return cpf.EndsWith(digit);
+        }
+
+        private bool isCellphoneValid(string cellphone)
+        {
+            cellphone= cellphone.CellphoneFormatter();
+
+            if (cellphone.Length < 10 || cellphone.Length > 11)
+                return false;
+
+            if (cellphone.Length == 11 && cellphone[2].ToString() != "9")
+                return false;
+
+            if (cellphone.Length == 10)
+                cellphone= cellphone.Substring(0, 2) + "9" + cellphone.Substring(2, 8);
+
+            for (int i = 0; i < 11; i++)
+            {
+                if (!char.IsDigit(cellphone[i]))
+                    return false;
+            }
+
+            return true;    
+        }
+
+        private bool isPostalCodeValid(string postalCode)
+        {
+            postalCode= postalCode.PostalCodeFormatter();
+
+            if (postalCode.Length != 8)
+                return false;
+
+            for (int i = 0; i < 8; i++) 
+            { 
+                if (!char.IsDigit(postalCode[i])) 
+                    return false;
+            }
+
+            return true;
         }
     }
 }

@@ -23,13 +23,13 @@ namespace EverestAPI.Models
             Email = email;
             EmailConfirmation = emailConfirmation;
             Cpf = cpf.CpfFormatter();
-            Cellphone = cellphone;
+            Cellphone = cellphone.CellphoneFormatter();
             DateOfBirth = dateOfBirth;
             EmailSms = emailSms;
             Whatsapp = whatsapp;
             Country = country;
             City = city;
-            PostalCode = postalCode;
+            PostalCode = postalCode.PostalCodeFormatter();
             Address = address;
         }
 

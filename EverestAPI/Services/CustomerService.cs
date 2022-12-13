@@ -17,6 +17,7 @@ namespace EverestAPI.Services
             if (customersList.Any(customer => customer.Email == model.Email))
                 throw new ArgumentException("This email already exists");
         }
+
         public long Create(CustomerModel customer)
         {
             CustomerDuplicate(customer);
@@ -27,6 +28,7 @@ namespace EverestAPI.Services
 
             return customer.Id;
         }
+
         public void Update(CustomerModel updateModel, long id)
         {
             CustomerDuplicate(updateModel);
@@ -40,20 +42,24 @@ namespace EverestAPI.Services
 
             customersList[index] = updateModel;
         }
+
         public CustomerModel GetById(long id) 
         {
             var response = customersList.FirstOrDefault(customer => customer.Id == id);
 
-            if (response == null) throw new ArgumentNullException($"Customer for id: {id} was not found");
+            if (response == null) 
+                throw new ArgumentNullException($"Customer for id: {id} was not found");
 
             return response;
         }
+
         public void Delete(long Id)
         {
             var customer = GetById(Id);
 
             customersList.Remove(customer);
         }
+
         public IEnumerable<CustomerModel> GetAll() 
         { 
             return customersList; 
